@@ -15,7 +15,7 @@ const Header = () => {
           className="text-center bg-[#edf6f9] rounded p-2"
           onClick={() => router.push("/gerarMeme")}
         >
-          Gerar meme aleatório
+          Criar meme
         </button>
       </div>
     </header>
