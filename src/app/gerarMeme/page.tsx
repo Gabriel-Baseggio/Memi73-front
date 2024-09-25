@@ -37,7 +37,38 @@ export default function gerarMeme() {
   const salvarImagem = (img: ChangeEvent<HTMLInputElement>) => {
     setImagem(img.target.files![0]);
   }
-  const enviarMeme = (form: FormData) => {
+  const enviar = (form: FormData) => {
+    if(form.get("frase") === "" && imagem != null) {
+      enviarImagem()
+    }else if(form.get("frase") !== "" && imagem == null) {
+      enviarFrase(form.get("frase")!.toString())
+    }else if(form.get("frase") !== "" && imagem != null) {
+      enviarMeme(form)
+    }
+    
+  }
+  const enviarFrase = (frase : string)=>{
+    api.post("envio/frase", frase).then((response)=>{
+      console.log(response)
+      if(response.status === 200){
+        alert("Frase criada com sucesso")
+      }
+    })
+    
+  }
+  const enviarImagem = ()=>{
+    let newForm = new FormData();
+    if (imagem != null) {
+      newForm.append("image", imagem);
+    }
+    api.post("envio/imagem",newForm).then((response)=>{
+      console.log(response)
+      if(response.status === 200){
+        alert("Imagem enviada com sucesso")
+      }
+    })
+  }
+  const enviarMeme = (form : FormData)=>{
     const dto = {
       frase: form.get("frase")
 
@@ -63,7 +94,7 @@ export default function gerarMeme() {
     <main className="flex flex-col justify-center items-center">
 
 
-      <form action={(form) => enviarMeme(form)} className="flex justify-center flex-col gap-2 bg-[#a8dadc] w-3/4 p-5 mt-6">
+      <form action={(form) => enviar(form)} className="flex justify-center flex-col gap-2 bg-[#a8dadc] w-3/4 p-5 mt-6">
         <h1 className="text-center font-bold text-lg">Gerar meme</h1>
         <div className="flex flex-col gap-2 w-full">
           <label htmlFor="frase">Crie a frase do meme</label>
